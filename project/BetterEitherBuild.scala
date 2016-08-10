@@ -5,7 +5,7 @@ object BetterEitherBuild extends BaseBuild {
 
   lazy val betterEither = project.in(file("."))
     .settings(moduleName := "root")
-    .settings(version := "0.1")
+    .settings(version := "0.1.1-20160810")
     .settings(commonSettings)
     .settings(noPublishSettings)
     .aggregate(eitherSyntax,eitherExtras)
@@ -22,7 +22,7 @@ object BetterEitherBuild extends BaseBuild {
 
   lazy val eitherExtras = project.in(file("either-extras"))
     .settings(moduleName := "either-extras")
-    .settings(version := "0.1")
+    .settings(version := "0.1.1-20160810")
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(

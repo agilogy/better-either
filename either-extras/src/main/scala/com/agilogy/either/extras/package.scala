@@ -5,7 +5,7 @@ import scala.language.{higherKinds, implicitConversions}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
-package object extras {
+package object extras extends EitherExtraSyntax {
 
   type Fold[M[_], a, b] = (M[a]) => (=> b) => (a => b) => b
 
@@ -22,7 +22,6 @@ package object extras {
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf","org.wartremover.warts.NonUnitStatements"))
   def sequenceTraversable[E, R, C[_] <: TraversableOnce[_]](v: C[Either[E, R]])(appendE: (E, E) => E)(implicit cbf: CanBuildFrom[C[Either[E, R]], R, C[R]]): Either[E, C[R]] = {
-    import com.agilogy.either.extras.syntax._
     val builder = cbf()
     val fl: Either[E, Unit] = v.asInstanceOf[Traversable[Either[E, R]]].foldLeft[Either[E, Unit]](right(())) { (e1, e2) =>
       e1.combine[E, R, Unit](e2, appendE, (_, r) => builder += r)
@@ -73,5 +72,9 @@ package object extras {
     case NonFatal(t) => left(t)
   }
 
+  def lift[R1, R2](f: R1 => R2): ValidationFunctor[Nothing, R1, R2] = new ValidationFunctor(right(f))
+
+  @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion"))
+  implicit def validationFunctor[E, R1, R2](f: Either[List[E], R1 => R2]): ValidationFunctor[E, R1, R2] = new ValidationFunctor(f)
 
 }

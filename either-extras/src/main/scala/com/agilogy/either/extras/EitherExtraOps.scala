@@ -15,7 +15,7 @@ class EitherExtraOps[+E,+R](val self:Either[E,R]) extends AnyVal{
   def mapLeft[E2](f: E => E2): Either[E2, R] = self.left.map(f)
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-  def ap[EE >: E, R2](vf: Either[EE, R => R2], append: (EE,EE) => EE): Either[EE, R2] = (self, vf) match {
+  def ap[EE, R2](vf: Either[EE, R => R2], append: (E,EE) => EE): Either[EE, R2] = (self, vf) match {
     case (Right(v), Right(f)) => Right(f(v))
     case (e@Left(_), Right(_)) => e.asInstanceOf[Either[EE,R2]]
     case (Right(_), e@Left(_)) => e.asInstanceOf[Either[EE,R2]]
