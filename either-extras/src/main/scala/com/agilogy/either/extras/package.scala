@@ -58,6 +58,18 @@ package object extras extends EitherExtraSyntax {
     case NonFatal(t) => left(t)
   }
 
+  /**
+    * Evaluates the specified block, catching exceptions of the specified type and returning them on the left side of
+    * the resulting `Xor`. Uncaught exceptions are propagated.
+    *
+    * For example:
+    * {{{
+    * scala> Xor.catchOnly[NumberFormatException] { "foo".toInt }
+    * res0: Xor[NumberFormatException, Int] = Left(java.lang.NumberFormatException: For input string: "foo")
+    * }}}
+    */
+  def catchOnly[T >: Null <: Throwable]: CatchOnlyPartiallyApplied[T] = new CatchOnlyPartiallyApplied[T]
+
   // Validation functor
 
   def lift[R1, R2](f: R1 => R2): ValidationFunctor[Nothing, R1, R2] = new ValidationFunctor(right(f))

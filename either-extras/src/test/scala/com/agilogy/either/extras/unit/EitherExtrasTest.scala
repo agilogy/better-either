@@ -55,6 +55,11 @@ class EitherExtrasTest extends FunSpec with TypeCheckedTripleEquals with TestSam
       assert(catchNonFatal(boom(exc)) === left(exc))
     }
 
+    it("should cachOnly"){
+      val exc = new IllegalArgumentException("boom")
+      assert(catchOnly[IllegalArgumentException](boom(exc)) === left(exc))
+    }
+
     it("should lift a function to accumulate errors while applying validated arguments") {
       def f(a: Int, b: Int): Int = a + b
       val fc = (f _).curried
@@ -74,10 +79,5 @@ class EitherExtrasTest extends FunSpec with TypeCheckedTripleEquals with TestSam
       assert((lift(fc) <*> simpleOk <**> err) === err)
       assert((lift(fc) <**> ok <*> simpleErr) === left(List(errV3)))
     }
-
-    // Unsupported cats.Validated methods
-    // catchOnly
-
-
   }
 }
