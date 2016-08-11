@@ -47,7 +47,7 @@ class EitherSyntaxTest extends FunSpec {
     it("should implement exists") {
       assert(ok.exists(_ == okv) === true)
       assert(ok.exists(_ == 42) === false)
-      assert(ok.exists(_ > 1000) === false)
+      assert(err.exists(_ => true) === false)
     }
 
     it("should implement flatMap") {

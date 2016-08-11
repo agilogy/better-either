@@ -41,6 +41,7 @@ class EitherExtrasSyntaxTest extends FunSpec with TestSamples with TypeCheckedTr
     }
 
     it("should implement excepting") {
+      assert(ok.excepting { case i if i % 2 == 0 => List(ErrorMessage("must not be even")) } === ok)
       assert(ok.excepting { case i if i % 2 == 1 => errV2 } === Left(errV2))
       assert(err.excepting { case i if i % 2 == 1 => errV2 } === err)
     }
