@@ -55,7 +55,25 @@ class EitherExtrasTest extends FunSpec with TypeCheckedTripleEquals with TestSam
       assert(catchNonFatal(boom(exc)) === left(exc))
     }
 
+    it("should lift a function to accumulate errors while applying validated arguments") {
+      def f(a: Int, b: Int): Int = a + b
+      val fc = (f _).curried
 
+      assert((lift(fc) <**> ok <**> ok) === right(okV + okV))
+      assert((lift(fc) <**> err <**> ok) === err)
+      assert((lift(fc) <**> err <**> err2) === left(errV ++ errV2))
+
+      val okV3 = 67
+      val simpleOk:Either[ErrorMessage,Int] = right(okV3)
+      val errV3 = ErrorMessage("errMsg3")
+      val simpleErr:Either[ErrorMessage,Int] = left(errV3)
+
+      assert((lift(fc) <*> simpleOk <**> ok) === right(okV3 + okV))
+      assert((lift(fc) <**> ok <*> simpleOk) === right(okV3 + okV))
+      assert((lift(fc) <**> err <*> simpleOk) === err)
+      assert((lift(fc) <*> simpleOk <**> err) === err)
+      assert((lift(fc) <**> ok <*> simpleErr) === left(List(errV3)))
+    }
 
     // Unsupported cats.Validated methods
     // catchOnly
