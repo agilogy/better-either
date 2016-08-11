@@ -9,7 +9,7 @@ trait BaseBuild extends Build{
   lazy val buildSettings = Seq(
     organization := "com.agilogy",
     scalaVersion := "2.11.7",
-    crossScalaVersions := Seq("2.10.6", "2.11.7")
+    crossScalaVersions := Seq("2.11.7","2.10.6")
   )
 
   def commonScalacOptions(scalaVersion: String): Seq[String] = Seq(
