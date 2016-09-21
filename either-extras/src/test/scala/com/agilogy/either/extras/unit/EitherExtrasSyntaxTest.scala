@@ -11,7 +11,7 @@ class EitherExtrasSyntaxTest extends FunSpec with TestSamples with TypeCheckedTr
 
     import com.agilogy.either.extras.syntax._
 
-    it("should import EitherOps with a single import of com.agilogy.either.extras._") {
+    it("should import EitherOps with a single import of com.agilogy.either.extras.syntax._") {
       assert(ok.map(_ + 1) === Right(okV + 1))
     }
 
@@ -34,10 +34,10 @@ class EitherExtrasSyntaxTest extends FunSpec with TestSamples with TypeCheckedTr
       val okF: Either[List[ErrorMessage], Int => Int] = Right(_ + 1)
       val errV1 = ErrorMessage("Not a valid int operand &&")
       val errF: Either[List[ErrorMessage], Int => Int] = Left(List(errV1))
-      assert(ok.ap(okF, append[ErrorMessage]) === Right(okV + 1))
-      assert(err.ap(okF, append[ErrorMessage]) === err)
-      assert(ok.ap(errF, append[ErrorMessage]) === Left(List(errV1)))
-      assert(err.ap(errF, append[ErrorMessage]) === Left(List(errV0, errV1)))
+      assert(ok.ap(okF) === Right(okV + 1))
+      assert(err.ap(okF) === err)
+      assert(ok.ap(errF) === Left(List(errV1)))
+      assert(err.ap(errF) === Left(List(errV0, errV1)))
     }
 
     it("should implement excepting") {
@@ -64,17 +64,17 @@ class EitherExtrasSyntaxTest extends FunSpec with TestSamples with TypeCheckedTr
     }
 
     it("should implement combine") {
-      assert(ok.combine(ok2, append[ErrorMessage], sum) === Right(okV + okV2))
-      assert(ok.combine(err2, append[ErrorMessage], sum) === err2)
-      assert(err.combine(ok2, append[ErrorMessage], sum) === err)
-      assert(err.combine(err2, append[ErrorMessage], sum) === Left(errV ++ errV2))
+      assert(ok.combine(ok2)(sum) === Right(okV + okV2))
+      assert(ok.combine(err2)(sum) === err2)
+      assert(err.combine(ok2)(sum) === err)
+      assert(err.combine(err2)(sum) === Left(errV ++ errV2))
     }
 
     it("should implement product") {
-      assert(ok.product(ok2, append[ErrorMessage]) === Right((okV, okV2)))
-      assert(ok.product(err2, append[ErrorMessage]) === Left(errV2))
-      assert(err.product(ok2, append[ErrorMessage]) === Left(errV))
-      assert(err.product(err2, append[ErrorMessage]) === Left(errV ++ errV2))
+      assert(ok.product(ok2) === Right((okV, okV2)))
+      assert(ok.product(err2) === Left(errV2))
+      assert(err.product(ok2) === Left(errV))
+      assert(err.product(err2) === Left(errV ++ errV2))
     }
 
     it("should implement toTry with arbitrary left values (and a throwable constructor)") {

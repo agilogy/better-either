@@ -25,7 +25,9 @@ object BetterEitherBuild extends BaseBuild {
     .settings(version := "0.1.1-20160810")
     .settings(commonSettings)
     .settings(
+      resolvers += Resolver.url("Agilogy Scala",url("http://dl.bintray.com/agilogy/scala/"))(Resolver.ivyStylePatterns),
       libraryDependencies ++= Seq(
+        "com.agilogy" %% "classis-monoid" % "0.2.rc1",
         "org.scalatest" %% "scalatest" % "2.2.4" % "test"
       )
     )

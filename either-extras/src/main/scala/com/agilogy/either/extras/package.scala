@@ -1,5 +1,7 @@
 package com.agilogy.either
 
+import com.agilogy.classis.monoid.Semigroup
+
 import scala.collection.generic.CanBuildFrom
 import scala.language.{higherKinds, implicitConversions}
 import scala.util.control.NonFatal
@@ -27,16 +29,16 @@ package object extras extends EitherExtraSyntax {
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf","org.wartremover.warts.NonUnitStatements"))
-  def sequenceTraversable[E, R, C[_] <: TraversableOnce[_]](v: C[Either[E, R]])(appendE: (E, E) => E)(implicit cbf: CanBuildFrom[C[Either[E, R]], R, C[R]]): Either[E, C[R]] = {
+  def sequenceTraversable[E, R, C[_] <: TraversableOnce[_]](v: C[Either[E, R]])(implicit sg:Semigroup[E], cbf: CanBuildFrom[C[Either[E, R]], R, C[R]]): Either[E, C[R]] = {
     val builder = cbf()
     val fl: Either[E, Unit] = v.asInstanceOf[Traversable[Either[E, R]]].foldLeft[Either[E, Unit]](right(())) { (e1, e2) =>
-      e1.combine[E, R, Unit](e2, appendE, (_, r) => builder += r)
+      e1.combine[E, R, Unit](e2)((_, r) => builder += r)
     }
     fl.map[C[R]](_ => builder.result())
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion"))
-  implicit def toTraversableOnceOps[E, R, C[_] <: TraversableOnce[_]](self: C[Either[E, R]])(implicit cbf: CanBuildFrom[C[Either[E, R]], R, C[R]]): TraversableOnceOps[E, R, C] =
+  implicit def toTraversableOnceOps[E, R, C[_] <: TraversableOnce[_]](self: C[Either[E, R]])(implicit sg:Semigroup[E], cbf: CanBuildFrom[C[Either[E, R]], R, C[R]]): TraversableOnceOps[E, R, C] =
     new TraversableOnceOps(self)
 
   // Try
@@ -60,21 +62,22 @@ package object extras extends EitherExtraSyntax {
 
   /**
     * Evaluates the specified block, catching exceptions of the specified type and returning them on the left side of
-    * the resulting `Xor`. Uncaught exceptions are propagated.
+    * the resulting `Either`. Uncaught exceptions are propagated.
     *
     * For example:
     * {{{
-    * scala> Xor.catchOnly[NumberFormatException] { "foo".toInt }
-    * res0: Xor[NumberFormatException, Int] = Left(java.lang.NumberFormatException: For input string: "foo")
+    * scala> catchOnly[NumberFormatException] { "foo".toInt }
+    * res0: Either[NumberFormatException, Int] = Left(java.lang.NumberFormatException: For input string: "foo")
     * }}}
     */
   def catchOnly[T >: Null <: Throwable]: CatchOnlyPartiallyApplied[T] = new CatchOnlyPartiallyApplied[T]
 
   // Validation functor
 
-  def lift[R1, R2](f: R1 => R2): ValidationFunctor[Nothing, R1, R2] = new ValidationFunctor(right(f))
+  @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion"))
+  implicit def lift[R1, R2](f: R1 => R2): ValidationFunctor[Nothing, R1, R2] = new ValidationFunctor(right(f))
 
   @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion"))
-  implicit def validationFunctor[E, R1, R2](f: Either[List[E], R1 => R2]): ValidationFunctor[E, R1, R2] = new ValidationFunctor(f)
+  implicit def validationFunctor[E, R1, R2](f: Either[E, R1 => R2]): ValidationFunctor[E, R1, R2] = new ValidationFunctor(f)
 
 }
