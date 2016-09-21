@@ -7,6 +7,15 @@ It currently has only 2 projects:
 - eitherSyntax: A port of the upcoming 2.12 right biased Either methods to Scala 2.10 and 2.11 (via pimp my library)
 - eitherExtras: Some more extra Either methods + helper functions to use Either as a full validation solution
 
+## Installation
+
+```
+resolvers += Resolver.url("Agilogy Scala",url("http://dl.bintray.com/agilogy/scala/"))(Resolver.ivyStylePatterns)
+
+libraryDependencies += "com.agilogy" %% "either-syntax" % "0.2.rc1"
+libraryDependencies += "com.agilogy" %% "either-extras" % "0.2.rc1"
+```
+
 ## Motivation
 
 Both Scalaz and Cats have replacements for Either (\/ and Xor). The main motivation for those alternative Eithers is
