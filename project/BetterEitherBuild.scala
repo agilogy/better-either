@@ -12,7 +12,7 @@ object BetterEitherBuild extends BaseBuild {
 
   lazy val eitherSyntax = project.in(file("either-syntax"))
     .settings(moduleName := "either-syntax")
-    .settings(version := "0.1")
+    .settings(version := "0.2.rc1")
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
@@ -22,7 +22,7 @@ object BetterEitherBuild extends BaseBuild {
 
   lazy val eitherExtras = project.in(file("either-extras"))
     .settings(moduleName := "either-extras")
-    .settings(version := "0.1.1-20160810")
+    .settings(version := "0.2.rc1")
     .settings(commonSettings)
     .settings(
       resolvers += Resolver.url("Agilogy Scala",url("http://dl.bintray.com/agilogy/scala/"))(Resolver.ivyStylePatterns),
