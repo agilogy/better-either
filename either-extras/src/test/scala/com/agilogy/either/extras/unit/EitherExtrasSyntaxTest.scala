@@ -58,9 +58,9 @@ class EitherExtrasSyntaxTest extends FunSpec with TestSamples with TypeCheckedTr
       assert(err.orElse(Left(errV2)) === Left(errV2))
     }
 
-    it("should implement getOrElse with a function") {
-      assert(ok.getOrElse(_.size) === okV)
-      assert(err.getOrElse(_.map(_.msg.size).sum) === errMsg.size)
+    it("should implement getWith with a function") {
+      assert(ok.getWith(_.size) === okV)
+      assert(err.getWith(_.map(_.msg.size).sum) === errMsg.size)
     }
 
     it("should implement combine") {

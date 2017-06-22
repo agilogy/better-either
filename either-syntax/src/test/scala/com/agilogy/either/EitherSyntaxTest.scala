@@ -5,7 +5,6 @@ import org.scalatest.FunSpec
 import scala.collection.mutable
 import scala.util.{Failure, Success}
 
-@SuppressWarnings(Array("org.wartremover.warts.Equals"))
 class EitherSyntaxTest extends FunSpec {
 
   describe("com.agilogy.either.syntax") {

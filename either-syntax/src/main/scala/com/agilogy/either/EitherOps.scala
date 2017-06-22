@@ -21,7 +21,7 @@ class EitherOps[+E, +R](val self: Either[E, R]) extends AnyVal {
     */
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def foreach[U](f: R => U): Unit = self match {
-    case Right(v) => f(v)
+    case Right(v) => f(v);()
     case Left(_) =>
   }
 

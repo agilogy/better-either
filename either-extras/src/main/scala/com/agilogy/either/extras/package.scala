@@ -32,7 +32,7 @@ package object extras extends EitherExtraSyntax {
   def sequenceTraversable[E, R, C[_] <: TraversableOnce[_]](v: C[Either[E, R]])(implicit sg:Semigroup[E], cbf: CanBuildFrom[C[Either[E, R]], R, C[R]]): Either[E, C[R]] = {
     val builder = cbf()
     val fl: Either[E, Unit] = v.asInstanceOf[Traversable[Either[E, R]]].foldLeft[Either[E, Unit]](right(())) { (e1, e2) =>
-      e1.combine[E, R, Unit](e2)((_, r) => builder += r)
+      e1.combine[E, R, Unit](e2){(_, r) => builder += r;()}
     }
     fl.map[C[R]](_ => builder.result())
   }

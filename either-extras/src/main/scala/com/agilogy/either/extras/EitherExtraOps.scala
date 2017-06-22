@@ -1,6 +1,5 @@
 package com.agilogy.either.extras
 
-import scala.language.higherKinds
 import scala.util.{Failure, Success, Try}
 import com.agilogy.classis.monoid._
 
@@ -43,7 +42,15 @@ class EitherExtraOps[+E,+R](val self:Either[E,R]) extends AnyVal{
     case r@Right(_) => r
   }
 
-  def getOrElse[RR >: R](fe: E => RR):RR = self match{
+  /**
+    * Returns the value from this `Right` or the result of applying `f to the contents of the `Left`.
+    *
+    * {{{
+    * (Right("12"):Either[List[String],String]).getWith(_.mkString) // "12"
+    * (Left(List("error1","error2")):Either[List[String],String]).getWith(_.mkString)  // "error1error2"
+    * }}}
+    */
+  def getWith[RR >: R](fe: E => RR):RR = self match{
     case Right(r) => r
     case Left(e) => fe(e)
   }
