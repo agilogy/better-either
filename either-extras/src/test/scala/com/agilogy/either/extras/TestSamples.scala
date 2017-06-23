@@ -1,4 +1,4 @@
-package com.agilogy.either.extras.unit
+package com.agilogy.either.extras
 
 trait TestSamples {
 
