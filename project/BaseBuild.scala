@@ -59,8 +59,11 @@ trait BaseBuild extends Build{
           )
         case Some((2,12)) =>
           Seq(
-            //TODO: Create a scala-pre-212 folder for the either syntax tests
-            "-Xlint:-unused,_" // AVoid unused warnings because either.syntax import is indeed unused in 2.12
+            // Avoid unused import warnings because either.syntax import is indeed unused in 2.12
+//            "-Xlint",
+//            "-Ywarn-unused"
+            "-Xlint:-unused,_",
+            "-Ywarn-unused:-imports,_"
           )
         case _ =>
           Seq()

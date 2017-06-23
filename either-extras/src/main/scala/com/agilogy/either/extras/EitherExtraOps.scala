@@ -38,7 +38,7 @@ class EitherExtraOps[+E,+R](val self:Either[E,R]) extends AnyVal{
   }
 
   def orElse[EE >: E, RR >: R](v: => Either[EE, RR]): Either[EE, RR] = self match {
-    case Left(e) => v
+    case Left(_) => v
     case r@Right(_) => r
   }
 
